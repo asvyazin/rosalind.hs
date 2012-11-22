@@ -19,6 +19,8 @@ gc str =
     
 type Entry = (String, String)
 type Dataset = [Entry]
+type GCEntry = (String, Float)
+type GCDataset = [GCEntry]
 
 dataset :: CharParser () Dataset
 dataset = many entry
@@ -39,3 +41,31 @@ value = many1 (letter <|> char '\n') >>= return . glue
 
 glue :: String -> String
 glue str = filter (/= '\n') str
+
+gcEntry :: Entry -> GCEntry
+gcEntry (k, s) = (k, gc s)
+
+parseGC :: String -> Dataset
+parseGC s =
+  case parse dataset "GC dataset" s of
+    Left err -> error $ show err
+    Right x -> x
+    
+gcDataset :: Dataset -> GCDataset
+gcDataset d = map gcEntry d
+
+maxGC :: GCDataset -> GCEntry
+maxGC [x] = x
+maxGC (x:xs) = maxGC2 x $ maxGC xs
+  where
+    maxGC2 e1@(k1, v1) e2@(k2, v2)
+      | v1 > v2 = e1
+      | otherwise = e2
+                    
+answer :: String -> GCEntry
+answer = maxGC . gcDataset . parseGC
+
+answerIO :: String -> IO ()
+answerIO filename = do
+  str <- readFile filename
+  print $ answer str
