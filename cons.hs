@@ -36,3 +36,20 @@ profileEntryToString (c, l) = (show c) ++ ": " ++ (intercalate " " $ map show l)
 
 profileToString :: Profile -> String
 profileToString = intercalate "\n" . map profileEntryToString
+
+readInput :: String -> [String]
+readInput = transpose . lines
+
+answer :: String -> String
+answer s = 
+  let p = profile $ readInput s
+      c = consensus p
+  in
+   c ++ "\n" ++ (profileToString p)
+   
+doWork :: String -> String -> IO ()
+doWork fileName outFileName = do
+  input <- readFile fileName
+  let s = answer input
+    in
+   writeFile outFileName s
