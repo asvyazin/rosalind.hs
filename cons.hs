@@ -12,7 +12,7 @@ type Profile = [ProfileEntry]
 profileEntry c ll = (c, cprofile c ll)
 
 profile :: [String] -> Profile
-profile ll = map ($ ll) $ map profileEntry ['A', 'C', 'G', 'T']
+profile ll = map (($ ll) . profileEntry) "ACGT"
 
 profileSplit :: ProfileEntry -> [(Char, Int)]
 profileSplit (c, l) = map (\x -> (c, x)) l
@@ -32,7 +32,7 @@ consensus :: Profile -> String
 consensus = map maxChar . profileTranspose
 
 profileEntryToString :: ProfileEntry -> String
-profileEntryToString (c, l) = (show c) ++ ": " ++ (intercalate " " $ map show l)
+profileEntryToString (c, l) = show c ++ ": " ++ unwords (map show l)
 
 profileToString :: Profile -> String
 profileToString = intercalate "\n" . map profileEntryToString
@@ -45,7 +45,7 @@ answer s =
   let p = profile $ readInput s
       c = consensus p
   in
-   c ++ "\n" ++ (profileToString p)
+   c ++ "\n" ++ profileToString p
    
 doWork :: String -> String -> IO ()
 doWork fileName outFileName = do

@@ -1,5 +1,6 @@
 module Fasta (Dataset, Entry, parseFasta) where
 
+import Control.Monad
 import Text.ParserCombinators.Parsec
 
 type Entry = (String, String)
@@ -20,10 +21,10 @@ key :: CharParser () String
 key = many1 (letter <|> digit <|> char '_')
 
 value :: CharParser () String
-value = many1 (letter <|> char '\n') >>= return . glue
+value = liftM glue (many1 (letter <|> char '\n'))
     
 glue :: String -> String
-glue str = filter (/= '\n') str
+glue = filter (/= '\n')
 
 parseFasta :: String -> Dataset
 parseFasta s =

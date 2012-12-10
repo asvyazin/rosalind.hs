@@ -24,7 +24,7 @@ gcEntry :: Entry -> GCEntry
 gcEntry (k, s) = (k, gc s)
 
 gcDataset :: Dataset -> GCDataset
-gcDataset d = map gcEntry d
+gcDataset = map gcEntry
 
 maxGC :: GCDataset -> GCEntry
 maxGC [x] = x

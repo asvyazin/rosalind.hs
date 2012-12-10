@@ -1,5 +1,5 @@
 triples [] = []
-triples (x0:x1:x2:xs) = ([x0, x1, x2]):(triples xs)
+triples (x0:x1:x2:xs) = [x0, x1, x2]:triples xs
 
 rna "UUU" = 'F'
 rna "UUC" = 'F'

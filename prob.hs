@@ -2,7 +2,7 @@ square :: Float -> Float
 square x = x * x
 
 prob1 :: Float -> Float
-prob1 x = 0.5 * ((square x) + (square (1 - x)))
+prob1 x = 0.5 * (square x + square (1 - x))
 
 prob = map prob1
 
